@@ -1,0 +1,40 @@
+version: "3"
+services:
+  symfony:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: symfony
+    volumes:
+      - ./symfony:/var/www/symfony
+
+  web:
+    image: nginx:alpine
+    ports: 
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - ./symfony:/var/www/symfony
+      - ./cert:/etc/letsencrypt
+      - ./dev/.env.local:/var/www/symfony/.env.local
+  db:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: abc123.
+      MYSQL_DATABASE: presta
+      MYSQL_USER: prestauser
+      MYSQL_PASSWORD: prestapaw
+    volumes:
+      - basedatos:/var/lib/mysql
+      - ./db:/docker-entrypoint-initdb.d/
+
+  phpmyadmin:
+    image:  phpmyadmin
+    restart: always
+    ports: 
+      - 8080:80
+    environment:
+      - PMA_HOST=db
+volumes:
+  basedatos:
