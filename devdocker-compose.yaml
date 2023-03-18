@@ -17,7 +17,7 @@ services:
       - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
       - ./symfony:/var/www/symfony
       - ./cert:/etc/letsencrypt
-      - ./prod/.env.local:/var/www/symfony/.env.local
+      - ./dev/.env.local:/var/www/symfony/.env.local
   db:
     image: mysql
     environment:
